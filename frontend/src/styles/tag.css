@@ -1,0 +1,6 @@
+.tag-chip {
+  display: inline-block; padding: 3px 10px;
+  font-size: 10px; font-weight: 700; border-radius: 20px;
+  background: rgba(72,111,93,0.14); border: 1px solid rgba(72,111,93,0.3);
+  color: var(--primary-light); letter-spacing: 0.5px; text-transform: uppercase;
+}

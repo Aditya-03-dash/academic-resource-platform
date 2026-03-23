@@ -1,12 +1,13 @@
 const express = require("express");
 const router = express.Router();
+const User = require("../models/User");
 
 const {
   getAllUsers,
   deleteUser
 } = require("../controllers/authController");
 
-const authMiddleware = require("../middleware/authMiddleware");
+const authMiddleware  = require("../middleware/authMiddleware");
 const adminMiddleware = require("../middleware/adminMiddleware");
 
 
@@ -16,7 +17,20 @@ router.get("/test", (req, res) => {
 });
 
 
-// ADMIN ONLY → Get all users
+// AUTH ONLY → Get all users for chat (name + email only, no sensitive data)
+router.get("/chat-users", authMiddleware, async (req, res) => {
+  try {
+    const users = await User.find()
+      .select("name email")
+      .lean();
+    res.json({ users });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+
+// ADMIN ONLY → Get all users (full data)
 router.get(
   "/",
   authMiddleware,

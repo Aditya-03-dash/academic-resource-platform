@@ -1,0 +1,8 @@
+.login-page {
+  min-height: calc(100vh - 120px);
+  display: flex; justify-content: center; align-items: center;
+  padding: 40px 20px;
+}
+.switch-form { margin-top: 20px; text-align: center; font-size: 13px; color: var(--text-muted); }
+.switch-form span { color: var(--gold); cursor: pointer; font-weight: 600; margin-left: 4px; transition: color .2s; }
+.switch-form span:hover { color: var(--gold-light); text-decoration: underline; }
