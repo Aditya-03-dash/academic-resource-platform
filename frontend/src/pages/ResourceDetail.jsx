@@ -18,15 +18,12 @@ export default function ResourceDetail() {
   const [notFound, setNotFound] = useState(false)
 
   useEffect(() => {
-    // Fetch single resource by getting all and finding by id
-    // (avoids needing a new backend endpoint)
-    resourceService.getAll()
-      .then(data => {
-        const found = (data.resources || []).find(r => r._id === id)
-        if (found) setResource(found)
+    resourceService.getById(id)
+      .then(data => setResource(data.resource))
+      .catch(err => {
+        if (err.response?.status === 404) setNotFound(true)
         else setNotFound(true)
       })
-      .catch(() => setNotFound(true))
       .finally(() => setLoading(false))
   }, [id])
 
@@ -54,10 +51,15 @@ export default function ResourceDetail() {
   const formatDate = (ts) =>
     new Date(ts).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
 
-  const getFileType = (filename) => {
-    if (!filename) return 'Unknown'
-    const ext = filename.split('.').pop()?.toUpperCase()
-    return ext || 'File'
+  const getFileType = (fileUrl) => {
+    if (!fileUrl) return 'Unknown'
+    // Cloudinary URLs may not end in the original extension,
+    // so check for known keywords in the URL path
+    const lower = fileUrl.toLowerCase()
+    if (lower.includes('.pdf') || lower.includes('pdf')) return 'PDF'
+    if (lower.includes('.docx') || lower.includes('docx')) return 'DOCX'
+    if (lower.includes('.doc')) return 'DOC'
+    return 'File'
   }
 
   if (loading) {
@@ -87,14 +89,12 @@ export default function ResourceDetail() {
 
   return (
     <Layout>
-      {/* Back link */}
       <Link to="/resources" className="detail-back">
         <FaArrowLeft /> Back to Resources
       </Link>
 
       <div className="detail-layout">
 
-        {/* Main content */}
         <div className="detail-main">
           <div className="detail-card">
 
@@ -147,7 +147,6 @@ export default function ResourceDetail() {
           </div>
         </div>
 
-        {/* Sidebar actions */}
         <div className="detail-sidebar">
           <div className="detail-actions-card">
             <h3>Actions</h3>

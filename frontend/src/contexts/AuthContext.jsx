@@ -11,7 +11,6 @@ export function AuthProvider({ children }) {
   const socketRef             = useRef(null)
 
   function initSocket(userId) {
-    // Disconnect existing socket first
     if (socketRef.current) {
       socketRef.current.disconnect()
       socketRef.current = null
@@ -20,20 +19,17 @@ export function AuthProvider({ children }) {
     const socket = io(BASE_URL, { transports: ['websocket'] })
     socketRef.current = socket
 
-    // Wait for connection before registering
     socket.on('connect', () => {
       console.log('[socket] connected, registering:', userId)
       socket.emit('registerUser', String(userId))
     })
 
-    // Re-register on reconnect (handles tab switching, network drops)
     socket.on('reconnect', () => {
       console.log('[socket] reconnected, re-registering:', userId)
       socket.emit('registerUser', String(userId))
     })
   }
 
-  // Rehydrate from localStorage on mount
   useEffect(() => {
     const storedUser  = authService.getStoredUser()
     const storedToken = authService.getToken()
@@ -72,7 +68,9 @@ export function AuthProvider({ children }) {
     <AuthContext.Provider value={{
       user,
       loading,
-      socket:          socketRef.current,
+      // Expose the ref itself, not socketRef.current — the ref object is stable
+      // and always points to the live socket, whereas .current can be stale
+      socketRef,
       isAuthenticated: !!user && !!authService.getToken(),
       isAdmin:         user?.role === 'admin',
       login,

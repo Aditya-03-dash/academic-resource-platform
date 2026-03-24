@@ -4,13 +4,12 @@ const router = express.Router();
 const {
   registerUser,
   loginUser,
-  getAllUsers,
-  deleteUser
 } = require("../controllers/authController");
 
 router.post("/register", registerUser);
 router.post("/login", loginUser);
-router.get("/users", getAllUsers);
-router.delete("/users/:id", deleteUser);
+
+// NOTE: /users (GET) and /users/:id (DELETE) have been removed from here.
+// They are protected by authMiddleware + adminMiddleware in userRoutes.js
 
 module.exports = router;

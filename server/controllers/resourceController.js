@@ -10,7 +10,6 @@ exports.createResource = async (req, res) => {
       return res.status(400).json({ message: "File is required." });
     }
 
-    // Cloudinary returns the full URL in req.file.path
     const fileUrl = req.file.path;
 
     const resource = await Resource.create({
@@ -40,6 +39,24 @@ exports.getResources = async (req, res) => {
       .sort({ createdAt: -1 });
 
     res.json({ count: resources.length, resources });
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
+// GET SINGLE RESOURCE BY ID
+exports.getResourceById = async (req, res) => {
+  try {
+    const resource = await Resource.findById(req.params.id)
+      .populate("uploadedBy", "name email");
+
+    if (!resource) {
+      return res.status(404).json({ message: "Resource not found" });
+    }
+
+    res.json({ resource });
 
   } catch (error) {
     res.status(500).json({ message: error.message });

@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 exports.registerUser = async (req, res) => {
   try {
 
-    const { name, email, password, role } = req.body;
+    const { name, email, password } = req.body;
 
     const existingUser = await User.findOne({ email });
 
@@ -16,11 +16,12 @@ exports.registerUser = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // role is always "user" on self-registration — never trust client input for this
     const user = await User.create({
       name,
       email,
       password: hashedPassword,
-      role: role || "user"
+      role: "user"
     });
 
     res.status(201).json({
@@ -57,7 +58,6 @@ exports.loginUser = async (req, res) => {
       return res.status(400).json({ message: "Invalid email or password" });
     }
 
-    // 🔐 Generate JWT Token HERE
     const token = jwt.sign(
       {
         id: user._id,
@@ -84,7 +84,6 @@ exports.loginUser = async (req, res) => {
 };
 
 
-
 // GET ALL USERS
 exports.getAllUsers = async (req, res) => {
     try {
@@ -102,7 +101,6 @@ exports.getAllUsers = async (req, res) => {
         });
     }
 };
-
 
 
 // DELETE USER

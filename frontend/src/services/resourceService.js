@@ -6,6 +6,11 @@ export const resourceService = {
     return data
   },
 
+  getById: async (id) => {
+    const { data } = await api.get(`/api/resources/${id}`)
+    return data
+  },
+
   getMine: async () => {
     const { data } = await api.get('/api/resources/my')
     return data

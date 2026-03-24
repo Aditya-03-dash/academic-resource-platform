@@ -1,16 +1,16 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { io } from 'socket.io-client'
 import { FaPaperPlane, FaCircle } from 'react-icons/fa'
 import Layout from '../components/Layout'
 import { toast } from '../utils/toast'
 import { useAuth } from '../contexts/AuthContext'
 import { messageService } from '../services/messageService'
-import { BASE_URL } from '../services/api'
 import api from '../services/api'
 import '../styles/pages/chat.css'
 
 export default function Chat() {
-  const { user } = useAuth()
+  // Pull socketRef from context — same socket that AuthContext manages,
+  // no second connection created here
+  const { user, socketRef } = useAuth()
 
   const [allUsers, setAllUsers]       = useState([])
   const [activeUser, setActiveUser]   = useState(null)
@@ -18,40 +18,30 @@ export default function Chat() {
   const [input, setInput]             = useState('')
   const [loadingMsgs, setLoadingMsgs] = useState(false)
 
-  // Each Chat page gets its own socket so receiveMessage works reliably
-  const socketRef = useRef(null)
   const bottomRef = useRef(null)
   const myId      = user?._id || user?.id
 
+  // Register receiveMessage listener on the shared socket
   useEffect(() => {
-    if (!myId) return
+    const socket = socketRef?.current
+    if (!socket) return
 
-    const socket = io(BASE_URL, { transports: ['websocket'] })
-    socketRef.current = socket
-
-    socket.on('connect', () => {
-      console.log('[chat] connected, registering:', myId)
-      socket.emit('registerUser', String(myId))
-    })
-
-    socket.on('reconnect', () => {
-      socket.emit('registerUser', String(myId))
-    })
-
-    socket.on('receiveMessage', (msg) => {
+    const handleReceive = (msg) => {
       setMessages(prev => {
         if (prev.find(m => m._id === msg._id)) return prev
         return [...prev, msg]
       })
-    })
-
-    return () => {
-      socket.disconnect()
-      socketRef.current = null
     }
-  }, [myId])
 
-  // Load user list via chat-specific endpoint (available to all logged-in users)
+    socket.on('receiveMessage', handleReceive)
+
+    // Clean up only the listener — do NOT disconnect the shared socket
+    return () => {
+      socket.off('receiveMessage', handleReceive)
+    }
+  }, [socketRef])
+
+  // Load user list
   useEffect(() => {
     api.get('/api/users/chat-users')
       .then(({ data }) => {
@@ -77,14 +67,16 @@ export default function Chat() {
   }, [messages])
 
   const sendMessage = useCallback(() => {
-    if (!input.trim() || !activeUser || !socketRef.current) return
-    socketRef.current.emit('sendMessage', {
+    const socket = socketRef?.current
+    if (!input.trim() || !activeUser || !socket) return
+
+    socket.emit('sendMessage', {
       senderId:   String(myId),
       receiverId: String(activeUser._id || activeUser.id),
       message:    input.trim()
     })
     setInput('')
-  }, [input, activeUser, myId])
+  }, [input, activeUser, myId, socketRef])
 
   const handleKey = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage() }
