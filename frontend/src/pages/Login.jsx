@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import Layout from '../components/Layout'
@@ -17,10 +17,9 @@ export default function Login() {
   const { login, register, isAuthenticated } = useAuth()
   const navigate = useNavigate()
 
-  if (isAuthenticated) {
-    navigate('/dashboard', { replace: true })
-    return null
-  }
+  useEffect(() => {
+    if (isAuthenticated) navigate('/dashboard', { replace: true })
+  }, [isAuthenticated, navigate])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -68,21 +67,21 @@ export default function Login() {
             {!isLogin && (
               <div className="input-group">
                 <label>Full Name</label>
-                <input type="text" placeholder="Jane Smith" value={name} onChange={e => setName(e.target.value)} required />
+                <input type="text" placeholder="Jane Smith" value={name} onChange={e => setName(e.target.value)} autoComplete="name" required />
               </div>
             )}
             <div className="input-group">
               <label>Email</label>
-              <input type="email" placeholder="you@university.edu" value={email} onChange={e => setEmail(e.target.value)} required />
+              <input type="email" placeholder="you@university.edu" value={email} onChange={e => setEmail(e.target.value)} autoComplete="email" required />
             </div>
             <div className="input-group">
               <label>Password</label>
-              <input type="password" placeholder="••••••••" value={password} onChange={e => setPassword(e.target.value)} required />
+              <input type="password" placeholder="••••••••" value={password} onChange={e => setPassword(e.target.value)} autoComplete={isLogin ? "current-password" : "new-password"} required />
             </div>
             {!isLogin && (
               <div className="input-group">
                 <label>Confirm Password</label>
-                <input type="password" placeholder="••••••••" value={confirm} onChange={e => setConfirm(e.target.value)} required />
+                <input type="password" placeholder="••••••••" value={confirm} onChange={e => setConfirm(e.target.value)} autoComplete="new-password" required />
               </div>
             )}
             <button type="submit" className="btn-primary" disabled={loading}>

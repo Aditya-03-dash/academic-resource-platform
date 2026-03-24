@@ -1,36 +1,17 @@
-import { FaDownload, FaTrash, FaUser, FaTag } from 'react-icons/fa'
-import { resourceService } from '../services/resourceService'
-import { useAuth } from '../contexts/AuthContext'
-import { toast } from '../utils/toast'
+import { useNavigate } from 'react-router-dom'
+import { FaArrowRight, FaUser } from 'react-icons/fa'
 import Tag from './Tag'
 import '../styles/resourceCard.css'
 
 export default function ResourceCard({ resource, onDelete }) {
-  const { user, isAdmin } = useAuth()
-
-  const canDelete =
-    isAdmin ||
-    (resource.uploadedBy?._id || resource.uploadedBy) === (user?._id || user?.id)
-
-  const handleDownload = () => {
-    const url = resourceService.getFileUrl(resource.fileUrl)
-    window.open(url, '_blank')
-    toast.success('Download started!')
-  }
-
-  const handleDelete = async () => {
-    if (!window.confirm('Delete this resource?')) return
-    try {
-      await resourceService.delete(resource._id)
-      toast.success('Resource deleted.')
-      onDelete?.(resource._id)
-    } catch (err) {
-      toast.error(err.response?.data?.message || 'Delete failed.')
-    }
-  }
+  const navigate = useNavigate()
 
   return (
-    <div className="resource-card">
+    <div
+      className="resource-card"
+      onClick={() => navigate(`/resources/${resource._id}`)}
+      style={{ cursor: 'pointer' }}
+    >
       <div className="card-glow" />
 
       <h3 className="resource-title">{resource.title}</h3>
@@ -46,18 +27,11 @@ export default function ResourceCard({ resource, onDelete }) {
         {resource.uploadedBy?.name || 'Unknown'}
       </p>
 
-      <div className="card-actions">
-        <button className="download-btn" onClick={handleDownload}>
-          <FaDownload />
-          Download
-        </button>
-
-        {canDelete && (
-          <button className="delete-btn" onClick={handleDelete}>
-            <FaTrash />
-          </button>
-        )}
+      <div className="card-cta">
+        <span>View details</span>
+        <FaArrowRight className="card-cta-arrow" />
       </div>
+
     </div>
   )
 }

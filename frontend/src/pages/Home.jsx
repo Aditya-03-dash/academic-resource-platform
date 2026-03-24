@@ -4,6 +4,7 @@ import { FaArrowRight, FaBookOpen, FaUsers, FaUpload } from 'react-icons/fa'
 import Layout from '../components/Layout'
 import ResourceCard from '../components/ResourceCard'
 import { resourceService } from '../services/resourceService'
+import { useAuth } from '../contexts/AuthContext'
 import '../styles/pages/home.css'
 
 export default function Home() {
@@ -17,6 +18,8 @@ export default function Home() {
       .finally(() => setLoading(false))
   }, [])
 
+  const { isAuthenticated } = useAuth()
+
   const features = [
     { icon: <FaBookOpen />, title: 'Curated Notes',  desc: 'Quality materials vetted by your peers, not algorithms.' },
     { icon: <FaUsers />,    title: 'Peer Community', desc: 'Connect directly with classmates across every subject.' },
@@ -28,7 +31,7 @@ export default function Home() {
       <section className="home-hero">
         <div className="hero-badge">
           <span className="hero-badge-dot" />
-          Collaborative Academic Platform
+          LearnHive
         </div>
         <h1 className="hero-title">
           Study smarter.<br />
@@ -42,7 +45,7 @@ export default function Home() {
           <Link to="/resources" className="btn-primary">
             Browse Resources <FaArrowRight />
           </Link>
-          <Link to="/login" className="btn-ghost">
+          <Link to={isAuthenticated ? '/upload' : '/login'} className="btn-ghost">
             Start sharing
           </Link>
         </div>

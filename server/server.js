@@ -1,85 +1,89 @@
-const http = require("http");
+const http     = require("http");
 const { Server } = require("socket.io");
-
-const app = require("./app");
-const Message = require("./models/Message");
+const app      = require("./app");
+const Message  = require("./models/Message");
 
 const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "*"
+    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    methods: ["GET", "POST"]
   }
 });
 
-// Store online users
-const users = {};
+// userId → socketId map (in-memory; replace with Redis for multi-instance)
+const onlineUsers = new Map();
 
 io.on("connection", (socket) => {
+  console.log(`[socket] connected: ${socket.id}`);
 
-  console.log("User connected:", socket.id);
-
-
-  // Register user socket
+  // ── Register user ──────────────────────────────────────────────
   socket.on("registerUser", (userId) => {
-
-    users[userId] = socket.id;
-
-    console.log("Active Users:", users);
-
+    if (!userId) return;
+    onlineUsers.set(String(userId), socket.id);
+    console.log(`[socket] registered ${userId} → ${socket.id}`);
+    // Broadcast updated online list (optional UX improvement)
+    io.emit("onlineUsers", Array.from(onlineUsers.keys()));
   });
 
-
-  // Send Message
-  socket.on("sendMessage", async (data) => {
+  // ── Send message ───────────────────────────────────────────────
+  socket.on("sendMessage", async ({ senderId, receiverId, message }) => {
+    if (!senderId || !receiverId || !message?.trim()) return;
 
     try {
-
-      const { senderId, receiverId, message } = data;
-
-      // Save message to database
       const newMessage = await Message.create({
-        sender: senderId,
+        sender:   senderId,
         receiver: receiverId,
-        message
+        message:  message.trim()
       });
 
-      // Find receiver socket
-      const receiverSocket = users[receiverId];
+      const payload = newMessage.toObject();
 
+      // Deliver to receiver (if online)
+      const receiverSocket = onlineUsers.get(String(receiverId));
       if (receiverSocket) {
-        io.to(receiverSocket).emit("receiveMessage", newMessage);
+        io.to(receiverSocket).emit("receiveMessage", payload);
       }
 
-      // Also send back to sender
-      socket.emit("receiveMessage", newMessage);
+      // Echo back to sender so their UI updates immediately
+      socket.emit("receiveMessage", payload);
 
-    } catch (error) {
-      console.error("Message error:", error);
+    } catch (err) {
+      console.error("[socket] sendMessage error:", err.message);
+      socket.emit("messageError", { error: "Message could not be saved." });
     }
-
   });
 
+  // ── Typing indicator (bonus) ───────────────────────────────────
+  socket.on("typing", ({ senderId, receiverId }) => {
+    const receiverSocket = onlineUsers.get(String(receiverId));
+    if (receiverSocket) {
+      io.to(receiverSocket).emit("userTyping", { senderId });
+    }
+  });
 
-  // Disconnect
+  socket.on("stopTyping", ({ senderId, receiverId }) => {
+    const receiverSocket = onlineUsers.get(String(receiverId));
+    if (receiverSocket) {
+      io.to(receiverSocket).emit("userStopTyping", { senderId });
+    }
+  });
+
+  // ── Disconnect ─────────────────────────────────────────────────
   socket.on("disconnect", () => {
-
-    console.log("User disconnected:", socket.id);
-
-    for (let userId in users) {
-      if (users[userId] === socket.id) {
-        delete users[userId];
+    for (const [userId, sid] of onlineUsers) {
+      if (sid === socket.id) {
+        onlineUsers.delete(userId);
+        console.log(`[socket] ${userId} disconnected`);
         break;
       }
     }
-
+    io.emit("onlineUsers", Array.from(onlineUsers.keys()));
   });
-
 });
 
-
 const PORT = process.env.PORT || 5000;
-
 server.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`✅  Server running on http://localhost:${PORT}`);
 });

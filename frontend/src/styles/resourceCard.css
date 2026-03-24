@@ -9,41 +9,29 @@
 
 .card-glow {
   position: absolute; top: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(126,184,154,0.4), transparent);
+  background: linear-gradient(90deg, transparent, rgba(143,188,158,0.35), transparent);
   opacity: 0; transition: opacity .4s;
 }
 
 .resource-card:hover {
-  transform: translateY(-5px);
-  border-color: rgba(126,184,154,0.35);
-  box-shadow:
-    0 16px 48px rgba(0,0,0,0.55),
-    0 0 0 1px rgba(72,111,93,0.2),
-    0 0 32px rgba(72,111,93,0.08);
+  transform: translateY(-4px);
+  border-color: rgba(143,188,158,0.28);
+  box-shadow: 0 14px 40px rgba(0,0,0,0.4), 0 0 28px rgba(72,111,93,0.07);
 }
 .resource-card:hover .card-glow { opacity: 1; }
 
 .resource-title {
-  font-family: var(--font-display);
-  font-size: 17px; font-weight: 600;
-  color: var(--text-pri);
-  line-height: 1.3;
-  letter-spacing: -0.2px;
+  font-family: var(--font-display); font-size: 17px; font-weight: 600;
+  color: var(--text-pri); line-height: 1.3; letter-spacing: -0.2px;
 }
 
 .resource-desc {
   font-size: 13px; color: var(--text-sec);
-  display: -webkit-box;
-  -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
-  line-clamp: 2;
-  line-height: 1.6;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  line-clamp: 2; overflow: hidden; line-height: 1.6;
 }
 
-.resource-author {
-  display: flex; align-items: center; gap: 6px;
-  font-size: 12px; color: var(--text-muted);
-  margin-top: 2px;
-}
+.resource-author { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted); margin-top: 2px; }
 .author-icon { font-size: 10px; color: var(--primary-light); }
 
 .card-actions { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
@@ -52,19 +40,31 @@
   flex: 1; display: flex; align-items: center; justify-content: center; gap: 7px;
   padding: 9px 14px; border: none; border-radius: var(--radius-sm);
   background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-  color: #1a1208; font-size: 13px; font-weight: 700;
-  cursor: pointer; transition: transform .2s, box-shadow .2s;
-  position: relative; overflow: hidden;
+  color: #1c1008; font-size: 13px; font-weight: 700;
+  cursor: pointer; transition: transform .2s, box-shadow .2s; position: relative; overflow: hidden;
 }
-.download-btn::before { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(255,255,255,0.12), transparent); }
-.download-btn:hover { transform: scale(1.03); box-shadow: 0 6px 22px var(--gold-glow); }
+.download-btn::before { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(255,255,255,0.1), transparent); }
+.download-btn:hover { transform: scale(1.03); box-shadow: 0 6px 20px var(--gold-glow); }
 
 .delete-btn {
-  width: 36px; height: 36px;
-  display: flex; align-items: center; justify-content: center;
-  border: 1px solid rgba(224,92,92,0.2);
-  border-radius: var(--radius-sm);
-  background: rgba(224,92,92,0.05);
-  color: rgba(224,92,92,0.6); cursor: pointer; transition: .2s; flex-shrink: 0;
+  width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+  border: 1px solid rgba(217,96,96,0.18); border-radius: var(--radius-sm);
+  background: rgba(217,96,96,0.04); color: rgba(217,96,96,0.5);
+  cursor: pointer; transition: .2s; flex-shrink: 0;
 }
-.delete-btn:hover { background: rgba(224,92,92,0.15); border-color: rgba(224,92,92,0.5); color: var(--red); transform: scale(1.06); }
+.delete-btn:hover { background: rgba(217,96,96,0.12); border-color: rgba(217,96,96,0.45); color: var(--red); transform: scale(1.06); }
+
+.card-cta {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 12px; padding-top: 12px;
+  border-top: 1px solid var(--border);
+  font-size: 13px; font-weight: 600;
+  color: var(--primary-light);
+  transition: color .2s;
+}
+.card-cta-arrow {
+  font-size: 11px;
+  transition: transform .2s;
+}
+.resource-card:hover .card-cta { color: var(--gold); }
+.resource-card:hover .card-cta-arrow { transform: translateX(4px); }

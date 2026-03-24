@@ -1,115 +1,56 @@
 .form-container {
-  width: 100%; max-width: 450px;
-  padding: 40px 36px;
-  background: rgba(72, 111, 93, 0.04);
-  backdrop-filter: blur(28px);
-  border: 1px solid var(--border-card);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-lg), 0 0 0 1px rgba(72,111,93,0.06) inset;
+  width: 100%; max-width: 450px; padding: 40px 36px;
+  background: rgba(72,111,93,0.05);
+  backdrop-filter: blur(24px);
+  border: 1px solid var(--border-card); border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg), 0 0 0 1px rgba(72,111,93,0.05) inset;
 }
 
 .form-brand {
   display: flex; align-items: center; gap: 8px;
-  font-family: var(--font-display);
-  font-size: 13px; font-weight: 500;
-  color: var(--text-muted);
-  margin-bottom: 24px;
-  letter-spacing: 0.3px;
-  font-style: italic;
+  font-family: var(--font-display); font-size: 13px; font-weight: 500; font-style: italic;
+  color: var(--text-muted); margin-bottom: 24px; letter-spacing: 0.3px;
 }
 
 .form-brand-dot {
   width: 7px; height: 7px; border-radius: 50%;
-  background: var(--gold);
-  box-shadow: 0 0 10px var(--gold-glow);
-  display: inline-block;
+  background: var(--gold); box-shadow: 0 0 8px var(--gold-glow); display: inline-block;
 }
 
-.form-title {
-  font-size: clamp(24px, 3vw, 32px);
-  font-family: var(--font-display);
-  font-weight: 700;
-  letter-spacing: -0.5px;
-  margin-bottom: 6px;
-  color: var(--text-pri);
-}
-
-.form-subtitle {
-  color: var(--text-sec);
-  font-size: 14px;
-  margin-bottom: 32px;
-  line-height: 1.5;
-}
+.form-title { font-size: clamp(24px, 3vw, 32px); font-family: var(--font-display); font-weight: 700; letter-spacing: -0.5px; margin-bottom: 6px; color: var(--text-pri); }
+.form-subtitle { color: var(--text-sec); font-size: 14px; margin-bottom: 32px; line-height: 1.5; }
 
 .form { display: flex; flex-direction: column; gap: 18px; }
-
 .input-group { display: flex; flex-direction: column; gap: 7px; }
-
-.input-group label {
-  font-size: 12px; font-weight: 600;
-  color: var(--text-sec);
-  text-transform: uppercase;
-  letter-spacing: 0.6px;
-}
+.input-group label { font-size: 12px; font-weight: 600; color: var(--text-sec); text-transform: uppercase; letter-spacing: 0.6px; }
 
 .input-group input,
 .input-group textarea {
-  padding: 12px 14px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border);
-  background: var(--bg-input);
-  color: var(--text-pri);
-  font-size: 14px;
+  padding: 12px 14px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border); background: var(--bg-input);
+  color: var(--text-pri); font-size: 14px;
   transition: border-color .2s, box-shadow .2s, background .2s;
 }
-
 .input-group input:focus,
 .input-group textarea:focus {
-  outline: none;
-  border-color: var(--primary-light);
-  background: rgba(72,111,93,0.12);
-  box-shadow: 0 0 0 3px rgba(72,111,93,0.15);
+  outline: none; border-color: var(--primary-light);
+  background: rgba(72,111,93,0.1); box-shadow: 0 0 0 3px rgba(72,111,93,0.12);
 }
-
 .input-group input::placeholder,
 .input-group textarea::placeholder { color: var(--text-muted); }
 
 .file-upload {
   display: flex; align-items: center; justify-content: center; gap: 12px;
   padding: 20px; border-radius: var(--radius-md);
-  border: 1.5px dashed rgba(72,111,93,0.25);
-  background: var(--bg-input);
-  color: var(--text-sec); cursor: pointer;
-  transition: .28s;
+  border: 1.5px dashed rgba(126,168,142,0.2); background: var(--bg-input);
+  color: var(--text-sec); cursor: pointer; transition: .28s;
 }
-.file-upload:hover {
-  border-color: var(--primary-light);
-  background: rgba(72,111,93,0.1);
-  box-shadow: 0 0 24px rgba(72,111,93,0.15);
-  color: var(--text-pri);
-}
+.file-upload:hover { border-color: var(--primary-light); background: rgba(72,111,93,0.09); color: var(--text-pri); }
 .file-upload input { display: none; }
-
 .upload-icon { font-size: 18px; color: var(--primary-light); }
-
-.file-name {
-  font-size: 13px;
-  max-width: 240px;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-
+.file-name { font-size: 13px; max-width: 240px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .upload-error { color: var(--red); font-size: 13px; }
 
-.progress-bar {
-  width: 100%; height: 5px;
-  background: rgba(72,111,93,0.12);
-  border-radius: 5px; overflow: hidden;
-  position: relative;
-}
-.progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--primary), var(--primary-light), var(--gold));
-  border-radius: 5px;
-  transition: width .25s ease;
-}
+.progress-bar { width: 100%; height: 5px; background: rgba(72,111,93,0.1); border-radius: 5px; overflow: hidden; position: relative; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--primary-light), var(--gold)); border-radius: 5px; transition: width .25s ease; }
 .progress-label { position: absolute; right: 0; top: -18px; font-size: 11px; color: var(--text-muted); }
