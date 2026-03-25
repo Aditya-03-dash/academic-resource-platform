@@ -1,15 +1,1 @@
-.resources-page{
-  margin-bottom:40px;
-}
-
-.resources-page h1{
-  margin-bottom:10px;
-}
-
-.no-results{
-  grid-column:1 / -1;
-  text-align:center;
-  color:#9ca3af;
-  font-size:16px;
-  margin-top:20px;
-}
+.no-results { grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 48px 0; font-size: 15px; font-family: var(--font-display); font-style: italic; }
