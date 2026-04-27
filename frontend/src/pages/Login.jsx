@@ -67,22 +67,58 @@ export default function Login() {
           <form className="form" onSubmit={handleSubmit}>
             {!isLogin && (
               <div className="input-group">
-                <label>Full Name</label>
-                <input type="text" placeholder="Jane Smith" value={name} onChange={e => setName(e.target.value)} required />
+                <label htmlFor="name">Full Name</label>
+                <input
+                  id="name"
+                  name="name"
+                  type="text"
+                  placeholder="Jane Smith"
+                  autoComplete="name"
+                  value={name}
+                  onChange={e => setName(e.target.value)}
+                  required
+                />
               </div>
             )}
             <div className="input-group">
-              <label>Email</label>
-              <input type="email" placeholder="you@university.edu" value={email} onChange={e => setEmail(e.target.value)} required />
+              <label htmlFor="email">Email</label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="you@university.edu"
+                autoComplete="email"
+                value={email}
+                onChange={e => setEmail(e.target.value.toLowerCase())}
+                required
+              />
             </div>
             <div className="input-group">
-              <label>Password</label>
-              <input type="password" placeholder="••••••••" value={password} onChange={e => setPassword(e.target.value)} required />
+              <label htmlFor="password">Password</label>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                placeholder="••••••••"
+                autoComplete={isLogin ? 'current-password' : 'new-password'}
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                required
+              />
             </div>
             {!isLogin && (
               <div className="input-group">
-                <label>Confirm Password</label>
-                <input type="password" placeholder="••••••••" value={confirm} onChange={e => setConfirm(e.target.value)} required />
+                <label htmlFor="confirm">Confirm Password</label>
+                <input
+                  id="confirm"
+                  name="confirm"
+                  type="password"
+                  placeholder="••••••••"
+                  autoComplete="new-password"
+                  value={confirm}
+                  onChange={e => setConfirm(e.target.value)}
+                  required
+                />
               </div>
             )}
             <button type="submit" className="btn-primary" disabled={loading}>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import { FaDownload, FaTrash, FaArrowLeft, FaUser, FaCalendar, FaFileAlt, FaTag } from 'react-icons/fa'
+import { FaDownload, FaExternalLinkAlt, FaTrash, FaArrowLeft, FaUser, FaCalendar, FaFileAlt, FaTag } from 'react-icons/fa'
 import Layout from '../components/Layout'
 import { toast } from '../utils/toast'
 import { useAuth } from '../contexts/AuthContext'
@@ -136,7 +136,7 @@ export default function ResourceDetail() {
           <div className="detail-actions-card">
             <h3>Actions</h3>
             <button className="btn-primary detail-download-btn" onClick={handleDownload}>
-              <FaDownload /> Download Resource
+              <FaExternalLinkAlt /> Open Resource
             </button>
             {canDelete && (
               <button className="detail-delete-btn" onClick={handleDelete}>
