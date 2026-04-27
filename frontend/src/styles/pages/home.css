@@ -1,4 +1,4 @@
-.home-hero { padding: 0px 0 70px; max-width: 700px; position: relative; }
+.home-hero { padding: 0px 0 70px; max-width: 700px; position: relative; margin-top: -20px; }
 
 .hero-badge {
   display: inline-flex; align-items: center; gap: 8px;
